@@ -1,4 +1,4 @@
-const {parse, collectDirectorySizes} = require('../day7');
+const {parse, collectDirectorySizes, sumSmallerFileSizes, solvePart1} = require('../day7');
 
 describe('Day 7', () => {
   it('should parse empty directory', () => {
@@ -92,6 +92,15 @@ describe('Day 7', () => {
     return root;
   }
 
+  const exampleSizes = {
+    "/": {
+      "size": 48381165,
+      "subDirectories": {
+        "a": {"size": 94853, "subDirectories": {"e": {"size": 584, "subDirectories": {}}}},
+        "d": {"size": 24933642, "subDirectories": {}}}
+    }
+  };
+
   it('should parse full example', () => {
     expect(parse(exampleInput)).toEqual(exampleDirectoryStructure());
   });
@@ -104,13 +113,14 @@ describe('Day 7', () => {
     let sizes = {};
     collectDirectorySizes(exampleDirectoryStructure(), sizes);
     console.log(sizes);
-    expect(sizes).toEqual({
-      "/": {
-        "size": 48381165,
-        "subDirectories": {
-          "a": {"size": 94853, "subDirectories": {"e": {"size": 584, "subDirectories": {}}}},
-          "d": {"size": 24933642, "subDirectories": {}}}
-      }
-    });
+    expect(sizes).toEqual(exampleSizes);
+  });
+
+  it('should sum smaller sizes', () => {
+    expect(sumSmallerFileSizes(exampleSizes, 100000)).toEqual(95437);
+  });
+
+  it('should solve part 1', () => {
+    expect(solvePart1(exampleInput)).toEqual(95437);
   });
 })

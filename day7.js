@@ -40,4 +40,25 @@ function collectDirectorySizes(node, result) {
   return total;
 }
 
-module.exports = {parse, collectDirectorySizes};
+function sumSmallerFileSizes(node, maxSize) {
+  let total = 0;
+  for (const [key, obj] of Object.entries(node)) {
+    if (obj.size <= maxSize) {
+      total += obj.size;
+    }
+    if (Object.keys(obj.subDirectories).length > 0) {
+      total += sumSmallerFileSizes(obj.subDirectories, maxSize);
+    }
+  }
+  return total;
+}
+
+function solvePart1(input) {
+  let directoryStructure = parse(input);
+  let sizes = {};
+  collectDirectorySizes(directoryStructure, sizes);
+  let total = sumSmallerFileSizes(sizes, 100000);
+  return total;
+}
+
+module.exports = {parse, collectDirectorySizes, sumSmallerFileSizes, solvePart1};
