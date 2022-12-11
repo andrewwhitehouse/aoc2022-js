@@ -1,5 +1,5 @@
 function parse(input) {
-  return {};
+  return {name: "/", files: [], subDirectories: []};
 }
 
 module.exports = {parse}
