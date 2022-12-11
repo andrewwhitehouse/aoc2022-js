@@ -1,4 +1,4 @@
-const {parse, collectDirectorySizes, sumSmallerFileSizes, solvePart1} = require('../day7');
+const {parse, collectDirectorySizes, sumSmallerFileSizes, solvePart1, findSmallestDirectoryLargerThanSize, solvePart2} = require('../day7');
 
 describe('Day 7', () => {
   it('should parse empty directory', () => {
@@ -122,5 +122,14 @@ describe('Day 7', () => {
 
   it('should solve part 1', () => {
     expect(solvePart1(exampleInput)).toEqual(95437);
+  });
+
+  it('should find smallest directory large than size', () => {
+    const FREE_SPACE_NEEDED = 30000000-21618835;
+    expect(findSmallestDirectoryLargerThanSize(exampleSizes, FREE_SPACE_NEEDED)).toEqual(24933642);
+  });
+
+  it('should solve part 2', () => {
+    expect(solvePart2(exampleInput)).toEqual(24933642);
   });
 })

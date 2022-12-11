@@ -53,6 +53,22 @@ function sumSmallerFileSizes(node, maxSize) {
   return total;
 }
 
+function findSmallestDirectoryLargerThanSize(node, minimumSize) {
+  let smallest = -1;
+  for (const [key, obj] of Object.entries(node)) {
+    if (obj.size >= minimumSize && (obj.size < smallest || smallest == -1)) {
+      smallest = obj.size;
+    }
+    if (Object.keys(obj.subDirectories).length > 0) {
+      let other = findSmallestDirectoryLargerThanSize(obj.subDirectories, minimumSize);
+      if (other != -1 && other < smallest) {
+        smallest = other;
+      }
+    }
+  }
+  return smallest;
+}
+
 function solvePart1(input) {
   let directoryStructure = parse(input);
   let sizes = {};
@@ -61,4 +77,17 @@ function solvePart1(input) {
   return total;
 }
 
-module.exports = {parse, collectDirectorySizes, sumSmallerFileSizes, solvePart1};
+function solvePart2(input) {
+  let directoryStructure = parse(input);
+  let sizes = {};
+  collectDirectorySizes(directoryStructure, sizes);
+  let rootDirectorySize = sizes["/"].size;
+  let unused = 70000000 - rootDirectorySize;
+  let extraNeeded = 30000000-unused;
+  let total = findSmallestDirectoryLargerThanSize(sizes, extraNeeded);
+  return total;
+}
+
+
+
+module.exports = {parse, collectDirectorySizes, sumSmallerFileSizes, solvePart1, findSmallestDirectoryLargerThanSize, solvePart2};
