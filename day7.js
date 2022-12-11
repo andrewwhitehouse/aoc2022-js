@@ -3,10 +3,7 @@ function parse(input) {
   let root = {name: "/", files: {}, subDirectories: {}, parent: null};
   let current = undefined;
   for(const line of lines) {
-    console.log(line);
-    console.log(root);
     if (line.startsWith('$')) {
-      console.log("Command " + line);
       let parts = line.split(" ");
       if (parts[1] === "cd") {
         if (parts[2] === "..") {
@@ -16,12 +13,10 @@ function parse(input) {
         }
       }
     } else {
-      console.log("Not a command " + line);
       let parts = line.split(" ");
       if (parts[0] === "dir") {
         current.subDirectories[parts[1]] = {name: parts[1], subDirectories: {}, files: {}, parent: current};
       } else {
-        console.log(parts);
         current.files[parts[1]] = parseInt(parts[0]);
       }
     }
@@ -29,4 +24,20 @@ function parse(input) {
   return root;
 }
 
-module.exports = {parse}
+function collectDirectorySizes(node, result) {
+  let total = 0;
+  for(const [name, size] of Object.entries(node.files)) {
+    total += size;
+  }
+  result[node.name] = {};
+  if (result[node.name]['subDirectories'] == undefined) {
+    result[node.name].subDirectories = {};
+  }
+  for (const [name, value] of Object.entries(node.subDirectories)) {
+    total += collectDirectorySizes(value, result[node.name].subDirectories);
+  }
+  result[node.name].size = total;
+  return total;
+}
+
+module.exports = {parse, collectDirectorySizes};
